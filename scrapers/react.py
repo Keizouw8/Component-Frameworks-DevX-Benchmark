@@ -66,7 +66,7 @@ def main():
                 continue
                 
             for file in files:
-                if file.endswith(".jsx"):
+                if file.endswith((".jsx", ".tsx")):
                     source_path = Path(root) / file
                     # Calculate relative path to maintain directory structure
                     relative_path = source_path.relative_to(repo_dir)
