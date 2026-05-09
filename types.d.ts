@@ -19,4 +19,4 @@ interface Result {
 	entropy: number;
 }
 
-declare type Results = { [key in FrameworkName]: Result[] };
+type Results = { [key in FrameworkName]: Result[] };

@@ -47,4 +47,4 @@ for (let framework of frameworks) {
 	}
 }
 
-console.log(results);
+Bun.file("./out/results.json").write(JSON.stringify(results, null, 4));
