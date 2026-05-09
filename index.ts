@@ -1,19 +1,24 @@
 import { Glob } from "bun";
 
 import radixEconomy from "./analyses/radix";
+import halsteadEffort from "./analyses/effort";
+import halsteadVolume from "./analyses/volume";
 
-import jsxParser from "./parsers/jsx";
+import reactParser, { jsxOperands } from "./parsers/react";
+import solidParser from "./parsers/solid";
 
 const frameworks: Framework[] = [
 	{
 		name: "react",
 		extensions: ["jsx", "tsx"],
-		parser: jsxParser
+		operands: jsxOperands,
+		parser: reactParser
 	},
 	{
 		name: "solid",
 		extensions: ["jsx", "tsx"],
-		parser: jsxParser
+		operands: jsxOperands,
+		parser: solidParser
 	}
 ];
 
@@ -28,8 +33,14 @@ for (let framework of frameworks) {
 		
 		try { var program = framework.parser(content); } catch { continue; }
 
+		let volume = halsteadVolume(program);
 		let radix = radixEconomy(program);
+		let effort = halsteadEffort(program, framework.operands);
 
-		results.push({ radix });
+		results.push({ volume, radix, effort });
+		
+		break;
 	}
+
+	console.log(results);
 }

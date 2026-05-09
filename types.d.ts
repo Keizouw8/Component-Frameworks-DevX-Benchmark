@@ -1,15 +1,17 @@
 interface Framework {
 	name: string;
 	extensions: string[];
+	operands: string[];
 	parser(content: string): Program;
 }
 
 interface Program {
 	tokens: string[];
-	total: number;
-	unique: number;
+	unique: string[];
 }
 
 interface Result {
+	volume: number;
 	radix: number;
+	effort: number;
 }
