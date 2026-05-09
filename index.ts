@@ -6,6 +6,7 @@ import halsteadVolume from "./analyses/volume";
 
 import reactParser, { jsxOperands } from "./parsers/react";
 import solidParser from "./parsers/solid";
+import shannonEntropy from "./analyses/entropy";
 
 const frameworks: Framework[] = [
 	{
@@ -22,11 +23,13 @@ const frameworks: Framework[] = [
 	}
 ];
 
+const results: Results = { react: [], solid: [] };
+
 for (let framework of frameworks) {
 	console.log(`Analyzing ${framework.name}`);
 	
 	let glob = new Glob(`**/*.{${framework.extensions.join()}}`);
-	let results: Result[] = [];
+	let i = 0;
 	
 	for await (let file of glob.scan(`./codebases/${framework.name}/`)) {
 		let content = await Bun.file(`./codebases/${framework.name}/${file}`).text();
@@ -36,11 +39,12 @@ for (let framework of frameworks) {
 		let volume = halsteadVolume(program);
 		let radix = radixEconomy(program);
 		let effort = halsteadEffort(program, framework.operands);
+		let entropy = shannonEntropy(program);
 
-		results.push({ volume, radix, effort });
+		results[framework.name].push({ volume, radix, effort, entropy });
 		
-		break;
+		if(++i > 9) break;
 	}
-
-	console.log(results);
 }
+
+console.log(results);
