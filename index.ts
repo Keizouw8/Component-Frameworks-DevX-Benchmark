@@ -1,30 +1,30 @@
+import { MultiBar } from "cli-progress";
 import { frameworks } from "./frameworks";
-
-import radixEconomy from "./analyses/radix";
-import halsteadEffort from "./analyses/effort";
-import halsteadVolume from "./analyses/volume";
-import shannonEntropy from "./analyses/entropy";
 
 const results: Results = { react: [], solid: [] };
 
-for (let framework of Object.values(frameworks)) {
-	let glob = new Bun.Glob(`**/*.{${framework.extensions.join()}}`);
-	let files = await Array.fromAsync(glob.scan(`./codebases/${framework.name}/`));
+const multibar = new MultiBar({
+	clearOnComplete: false,
+    hideCursor: true,
+    format: " {bar} | {framework} | {value}/{total}"
+});
+
+let promises = Object.keys(frameworks).map(framework => new Promise<void>(function (resolve) {
+	let bar = multibar.create(1, 0, { framework: frameworks[framework as FrameworkName].title });
+	let worker = new Worker("./workers/analyzeFramework.ts");
 	
-	console.log(`Analyzing ${framework.title}`);
-	
-	for await (let file of files) {
-		let content = await Bun.file(`./codebases/${framework.name}/${file}`).text();
-		
-		try { var program = framework.parser(content); } catch { continue; }
+	worker.onerror = console.log;
+	worker.onmessage = function (e: MessageEvent<{ event: string, data: any, first?: true }>) {
+		if (e.data.first) worker.postMessage({ event: "analyze" });
+		if (e.data.event == "amount") return bar.setTotal(e.data.data);
+		if (e.data.event == "count") return bar.update(e.data.data);
+		results[framework as FrameworkName] = e.data.data;
+		resolve();
+	};
 
-		let volume = halsteadVolume(program);
-		let radix = radixEconomy(program);
-		let effort = halsteadEffort(program, framework.operands);
-		let entropy = shannonEntropy(program);
+	worker.postMessage({ event: "init", data: framework });
+}));
 
-		results[framework.name].push({ volume, radix, effort, entropy });
-	}
-}
-
+await Promise.all(promises);
+multibar.stop();
 Bun.file("./out/results.json").write(JSON.stringify(results, null, 4));
