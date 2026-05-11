@@ -13,12 +13,13 @@ let promises = Object.keys(frameworks).map(framework => new Promise<void>(functi
 	let bar = multibar.create(1, 0, { framework: frameworks[framework as FrameworkName].title });
 	let worker = new Worker("./workers/analyzeFramework.ts");
 	
-	worker.onerror = console.log;
+	worker.onerror = console.error;
 	worker.onmessage = function (e: MessageEvent<{ event: string, data: any, first?: true }>) {
 		if (e.data.first) worker.postMessage({ event: "analyze" });
 		if (e.data.event == "amount") return bar.setTotal(e.data.data);
 		if (e.data.event == "count") return bar.update(e.data.data);
-		results[framework as FrameworkName] = e.data.data;
+		if (e.data.event == "batch") return results[framework as FrameworkName].push(...e.data.data);
+		worker.terminate();
 		resolve();
 	};
 
