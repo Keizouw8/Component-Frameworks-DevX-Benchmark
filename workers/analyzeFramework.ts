@@ -19,11 +19,26 @@ async function analyze() {
 		let batch = files.splice(0, BATCH_SIZE).map(file => new Promise<void>(function (resolve) {
 			let worker = new Worker("./workers/analyzeFile.ts");
 			
-			worker.onerror = console.error;
+			let timeout = setTimeout(function () {
+				worker.terminate();
+				postMessage({ event: "amount", data: --amount });
+				resolve();
+			}, 10000);
+			
+			worker.onerror = function (e: ErrorEvent) {
+				clearTimeout(timeout);
+				console.error(e);
+				postMessage({ event: "amount", data: --amount });
+				resolve();
+			};
+			
 			worker.onmessage = function (e: MessageEvent<Result | false>) {
-				if (!e.data) return postMessage({ event: "amount", data: --amount });
-				results.push(e.data);
-				postMessage({ event: "count", data: ++count });
+				clearTimeout(timeout);
+				if (!e.data) postMessage({ event: "amount", data: --amount });
+				else {
+					results.push(e.data);
+					postMessage({ event: "count", data: ++count });
+				}
 				resolve();
 			};
 			
@@ -41,7 +56,7 @@ function initialize(frameworkName: FrameworkName) {
 	framework = frameworks[frameworkName];
 	
 	let glob = new Bun.Glob(`**/*.{${framework.extensions.join()}}`);
-	files = Array.from(glob.scanSync(`./codebases/${framework.name}/`)).splice(0, 1000);
+	files = Array.from(glob.scanSync(`./codebases/${framework.name}/`));
 	
 	amount = files.length;
 	postMessage({ event: "amount", data: amount, first: true });
