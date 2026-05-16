@@ -13,7 +13,12 @@ let promises = Object.keys(frameworks).map(framework => new Promise<void>(functi
 	let bar = multibar.create(1, 0, { framework: frameworks[framework as FrameworkName].title });
 	let worker = new Worker("./workers/analyzeFramework.ts");
 	
-	worker.onerror = console.error;
+	worker.onerror = function (e) {
+		console.error(e);
+		worker.terminate();
+		resolve();
+	};
+
 	worker.onmessage = function (e: MessageEvent<{ event: string, data: any, first?: true }>) {
 		if (e.data.first) worker.postMessage({ event: "analyze" });
 		if (e.data.event == "amount") return bar.setTotal(e.data.data);
@@ -28,4 +33,4 @@ let promises = Object.keys(frameworks).map(framework => new Promise<void>(functi
 
 await Promise.all(promises);
 multibar.stop();
-Bun.file("./out/results.json").write(JSON.stringify(results, null, 4));
+Bun.write("./out/results.json", JSON.stringify(results, null, 4));

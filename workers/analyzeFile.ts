@@ -13,7 +13,7 @@ onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file
 		var program = framework.parser(content);
 	} catch {
 		postMessage(false);
-		process.exit();
+		return;
 	}
 
 	let volume = halsteadVolume(program);
@@ -22,5 +22,4 @@ onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file
 	let entropy = shannonEntropy(program);
 
 	postMessage({ volume, radix, effort, entropy });
-	process.exit();
 }

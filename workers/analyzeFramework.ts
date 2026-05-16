@@ -1,6 +1,7 @@
 import { frameworks } from "../frameworks";
 
-const BATCH_SIZE = 10;
+const CONCURRENCY = 10;
+const BATCH_SIZE = 50;
 
 let amount: number = 1;
 let files: string[];
@@ -13,43 +14,50 @@ onmessage = function (e: MessageEvent<{ event: "init" | "analyze", data: Framewo
 
 async function analyze() {
 	let count = 0;
+	let results: Result[] = [];
 	
-	while(files.length){
-		let results: Result[] = [];
-		let batch = files.splice(0, BATCH_SIZE).map(file => new Promise<void>(function (resolve) {
-			let worker = new Worker("./workers/analyzeFile.ts");
+	await Promise.all(Array.from({ length: CONCURRENCY }).map(async () => {
+		let worker = new Worker("./workers/analyzeFile.ts");
+		
+		while (files.length > 0) {
+			let file = files.shift()!;
 			
-			let timeout = setTimeout(function () {
-				worker.terminate();
-				postMessage({ event: "amount", data: --amount });
-				resolve();
-			}, 10000);
+			let res = await new Promise<Result | false>((resolve) => {
+				let timeout = setTimeout(function () {
+					worker.terminate();
+					worker = new Worker("./workers/analyzeFile.ts");
+					resolve(false);
+				}, 10000);
+				
+				worker.onerror = function (e: ErrorEvent) {
+					clearTimeout(timeout);
+					console.error(e);
+					worker.terminate();
+					worker = new Worker("./workers/analyzeFile.ts");
+					resolve(false);
+				};
+				
+				worker.onmessage = function (e: MessageEvent<Result | false>) {
+					clearTimeout(timeout);
+					resolve(e.data);
+				};
+				
+				worker.postMessage({ frameworkName: framework.name, file });
+			});
 			
-			worker.onerror = function (e: ErrorEvent) {
-				clearTimeout(timeout);
-				console.error(e);
-				postMessage({ event: "amount", data: --amount });
-				resolve();
-			};
-			
-			worker.onmessage = function (e: MessageEvent<Result | false>) {
-				clearTimeout(timeout);
-				if (!e.data) postMessage({ event: "amount", data: --amount });
-				else {
-					results.push(e.data);
-					postMessage({ event: "count", data: ++count });
-				}
-				resolve();
-			};
-			
-			worker.postMessage({ frameworkName: framework.name, file });
-		}));
-		await Promise.all(batch);
-		postMessage({ event: "batch", data: results });
-	}
+			if (!res) postMessage({ event: "amount", data: --amount });
+			else {
+				results.push(res);
+				postMessage({ event: "count", data: ++count });
+			}
+			if (results.length >= BATCH_SIZE) postMessage({ event: "batch", data: results.splice(0, results.length) });
+		}
+		
+		worker.terminate();
+	}));
 
+	if (results.length > 0) postMessage({ event: "batch", data: results });
 	postMessage({ event: "done" });
-	process.exit();
 }
 
 function initialize(frameworkName: FrameworkName) {

@@ -22,13 +22,10 @@ interface Result {
 	entropy: number;
 }
 
-interface Point {
-	x: number;
-	y: number;
-}
+type Point = [number, number];
 
 interface Dataset {
-	label: string;
+	name: string;
 	data: Point[];
-	backgroundColor: string;
+	color: string;
 }

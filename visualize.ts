@@ -20,14 +20,14 @@ for (let metric of whichMetrics) {
 	for (let framework of whichFrameworks) {
 		let dataset = generateDataset(results, frameworks[framework], metric, baseMetric);
 		allDatasets[metric].push(dataset);
-		generateChart(`./out/${metric}/${framework}.png`, [dataset], {
+		await generateChart(`./out/${metric}/${framework}.svg`, [dataset], {
 			title: `${metrics[metric]}: ${frameworks[framework].title}`,
 			x: metrics[baseMetric],
 			y: metrics[metric]
 		});
 	}
 	
-	generateChart(`./out/${metric}/${whichFrameworks.join("-")}.png`, allDatasets[metric], {
+	await generateChart(`./out/${metric}/${whichFrameworks.join("-")}.svg`, allDatasets[metric], {
 		title: `${metrics[metric]}: ${whichFrameworks.map(framework => frameworks[framework].title).join(" vs. ")}`,
 		x: metrics[baseMetric],
 		y: metrics[metric]
