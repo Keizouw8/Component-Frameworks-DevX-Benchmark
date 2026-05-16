@@ -1,6 +1,6 @@
 import { frameworks } from "../frameworks";
 
-const CONCURRENCY = 10;
+const CONCURRENCY = 6;
 const BATCH_SIZE = 50;
 
 let amount: number = 1;

@@ -1,7 +1,7 @@
 import { MultiBar } from "cli-progress";
 import { frameworks } from "./frameworks";
 
-const results: Results = { react: [], solid: [] };
+const results: Results = { react: [], solid: [], svelte: [], vue: [], angular: [] };
 
 const multibar = new MultiBar({
 	clearOnComplete: false,

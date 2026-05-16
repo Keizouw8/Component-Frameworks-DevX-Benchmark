@@ -11,7 +11,7 @@ const metrics: { [key: string]: string } = {
 
 let baseMetric = "volume";
 let whichMetrics = ["radix", "effort", "entropy"];
-let whichFrameworks: FrameworkName[] = ["react", "solid"];
+let whichFrameworks: FrameworkName[] = ["react", "solid", "svelte", "vue", "angular"];
 
 let allDatasets: { [key: string]: Dataset[] } = Object.fromEntries(whichMetrics.map(m => [m, []]));
 let results = await Bun.file("./out/results.json").json();

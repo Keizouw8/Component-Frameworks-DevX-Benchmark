@@ -18,7 +18,7 @@ onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file
 
 	let volume = halsteadVolume(program);
 	let radix = radixEconomy(program);
-	let effort = halsteadEffort(program, framework.operands);
+	let effort = halsteadEffort(program, framework.operators);
 	let entropy = shannonEntropy(program);
 
 	postMessage({ volume, radix, effort, entropy });

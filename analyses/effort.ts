@@ -1,6 +1,6 @@
 import halsteadVolume from "./volume";
 
-export default function halsteadEffort(program: Program, operands: string[]): number {
+export default function halsteadEffort(program: Program, operators: string[]): number {
 	let { tokens } = program;
 	
 	let V = halsteadVolume(program);
@@ -11,8 +11,9 @@ export default function halsteadEffort(program: Program, operands: string[]): nu
 
 	tokens.forEach(function (token) {
 		if (token == "eof") return;
-		if (operands.includes(token)) return ++N2 && uniqueOperands.add(token);
-		uniqueOperators.add(token);
+		if (operators.includes(token)) return uniqueOperators.add(token);
+		N2++;
+		uniqueOperands.add(token);
 	});
 
 	let n1 = uniqueOperators.size;

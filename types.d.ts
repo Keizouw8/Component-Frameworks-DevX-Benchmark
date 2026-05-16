@@ -1,11 +1,11 @@
-type FrameworkName = "react" | "solid";
+type FrameworkName = "react" | "solid" | "svelte" | "vue" | "angular";
 type Results = { [key in FrameworkName]: Result[] };
 
 interface Framework {
 	name: FrameworkName;
 	title: string;
 	extensions: string[];
-	operands: string[];
+	operators: string[];
 	parser(content: string): Program;
 	color: string
 }
