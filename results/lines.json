@@ -1,0 +1,122 @@
+{
+    "react": {
+        "radix": {
+            "params": [
+                2.9566,
+                0.5297
+            ],
+            "type": "power"
+        },
+        "effort": {
+            "params": [
+                0.0003,
+                64.7296,
+                -93042.7104
+            ],
+            "type": "polynomial"
+        },
+        "entropy": {
+            "params": [
+                0.0175,
+                14.6817
+            ],
+            "type": "linear"
+        }
+    },
+    "solid": {
+        "radix": {
+            "params": [
+                2.8518,
+                0.5323
+            ],
+            "type": "power"
+        },
+        "effort": {
+            "params": [
+                0.0007,
+                41.1521,
+                -14337.6782
+            ],
+            "type": "polynomial"
+        },
+        "entropy": {
+            "params": [
+                0.0164,
+                12.5123
+            ],
+            "type": "linear"
+        }
+    },
+    "svelte": {
+        "radix": {
+            "params": [
+                2.4404,
+                0.5898
+            ],
+            "type": "power"
+        },
+        "effort": {
+            "params": [
+                0.0006,
+                47.2803,
+                -26894.301
+            ],
+            "type": "polynomial"
+        },
+        "entropy": {
+            "params": [
+                0.0098,
+                9.9113
+            ],
+            "type": "linear"
+        }
+    },
+    "vue": {
+        "radix": {
+            "params": [
+                2.6367,
+                0.494
+            ],
+            "type": "power"
+        },
+        "effort": {
+            "params": [
+                0,
+                1.5761,
+                -48.542
+            ],
+            "type": "polynomial"
+        },
+        "entropy": {
+            "params": [
+                0.0278,
+                4.3084
+            ],
+            "type": "linear"
+        }
+    },
+    "angular": {
+        "radix": {
+            "params": [
+                1.6046,
+                0.6045
+            ],
+            "type": "power"
+        },
+        "effort": {
+            "params": [
+                0.0001,
+                94.0243,
+                -120295.9937
+            ],
+            "type": "polynomial"
+        },
+        "entropy": {
+            "params": [
+                0.0186,
+                14.0235
+            ],
+            "type": "linear"
+        }
+    }
+}

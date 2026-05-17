@@ -1,4 +1,5 @@
 type FrameworkName = "react" | "solid" | "svelte" | "vue" | "angular";
+type Method = "radix" | "effort" | "entropy";
 type Results = { [key in FrameworkName]: Result[] };
 
 interface Framework {
@@ -24,8 +25,11 @@ interface Result {
 
 type Point = [number, number];
 
-interface Dataset {
+interface Series {
 	name: string;
+	type: string;
 	data: Point[];
-	color: string;
+	itemStyle: { color: string };
+	smooth?: Boolean;
+	symbolSize?: number;
 }

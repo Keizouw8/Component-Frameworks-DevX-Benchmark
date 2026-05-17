@@ -33,4 +33,4 @@ let promises = Object.keys(frameworks).map(framework => new Promise<void>(functi
 
 await Promise.all(promises);
 multibar.stop();
-Bun.write("./out/results.json", JSON.stringify(results, null, 4));
+Bun.write("./results/results.json", JSON.stringify(results, null, 4));

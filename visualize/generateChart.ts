@@ -1,4 +1,13 @@
 import * as echarts from "echarts";
+import { transform } from "echarts-stat";
+import { createCanvas } from "canvas";
+
+echarts.registerTransform(transform.regression);
+echarts.setPlatformAPI({
+	createCanvas() {
+		return createCanvas(100, 100) as any;
+	}
+});
 
 interface ChartOptions{
 	title: string;
@@ -6,28 +15,20 @@ interface ChartOptions{
 	y: string;
 }
 
-export default async function generateChart(out: string, datasets: Dataset[], options: ChartOptions) {
-	const chart = echarts.init(null, null, {
-		renderer: "svg",
-		ssr: true,
-		width: 800,
-		height: 600
-	});
-
-	let series = datasets.map(({ name, data, color }) => ({
-		name, data,
-		itemStyle: { color },
-		type: "scatter"
-	}));
+export default async function generateChart(out: string, series: Series[], options: ChartOptions) {
+	const canvas = createCanvas(800, 600);
+	const chart = echarts.init(canvas as any);
 
 	chart.setOption({
+		series,
 		backgroundColor: "white",
 		title: {
 			text: options.title,
 			left: "center"
 		},
 		legend: {
-			top: 30
+			top: 30,
+			data: series.map(s => s.name).filter(s => !s.includes("fit"))
 		},
 		grid: {
 			containLabel: true
@@ -36,18 +37,20 @@ export default async function generateChart(out: string, datasets: Dataset[], op
 			name: options.x,
 			nameLocation: "middle",
 			nameGap: 30,
-			type: "value"
+			type: "value", 
+			min: 0
 		},
 		yAxis: {
 			name: options.y,
 			nameLocation: "middle",
 			nameGap: 50,
-			type: "value"
-		},
-		series: series as any
+			type: "value",
+			min: 0,
+			max: Math.max(...series.filter(d => !d.name.includes("fit")).flatMap(d => d.data).map(d => d[1]))
+		}
 	});
-	
-	const svg = chart.renderToSVGString();
-	await Bun.write(out, svg);
+
+	const buffer = canvas.toBuffer("image/png");
+	await Bun.write(out, buffer);
 	chart.dispose();
 }

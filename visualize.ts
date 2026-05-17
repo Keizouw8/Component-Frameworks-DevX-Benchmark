@@ -13,21 +13,21 @@ let baseMetric = "volume";
 let whichMetrics = ["radix", "effort", "entropy"];
 let whichFrameworks: FrameworkName[] = ["react", "solid", "svelte", "vue", "angular"];
 
-let allDatasets: { [key: string]: Dataset[] } = Object.fromEntries(whichMetrics.map(m => [m, []]));
-let results = await Bun.file("./out/results.json").json();
+let allSeries: { [key: string]: Series[] } = Object.fromEntries(whichMetrics.map(m => [m, []]));
+let results = await Bun.file("./results/results.json").json();
 
 for (let metric of whichMetrics) {
 	for (let framework of whichFrameworks) {
-		let dataset = generateDataset(results, frameworks[framework], metric, baseMetric);
-		allDatasets[metric].push(dataset);
-		await generateChart(`./out/${metric}/${framework}.svg`, [dataset], {
+		let series = generateDataset(results, frameworks[framework], metric, baseMetric);
+		allSeries[metric].push(...series);
+		await generateChart(`./results/${metric}/${framework}.png`, series, {
 			title: `${metrics[metric]}: ${frameworks[framework].title}`,
 			x: metrics[baseMetric],
 			y: metrics[metric]
 		});
 	}
-	
-	await generateChart(`./out/${metric}/${whichFrameworks.join("-")}.svg`, allDatasets[metric], {
+
+	await generateChart(`./results/${metric}/${whichFrameworks.join("-")}.png`, allSeries[metric], {
 		title: `${metrics[metric]}: ${whichFrameworks.map(framework => frameworks[framework].title).join(" vs. ")}`,
 		x: metrics[baseMetric],
 		y: metrics[metric]

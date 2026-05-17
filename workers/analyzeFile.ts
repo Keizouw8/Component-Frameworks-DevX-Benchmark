@@ -1,9 +1,9 @@
 import { frameworks } from "../frameworks";
 
-import radixEconomy from "../analyses/radix";
-import halsteadEffort from "../analyses/effort";
-import halsteadVolume from "../analyses/volume";
-import shannonEntropy from "../analyses/entropy";
+import radixEconomy from "../metrics/radix";
+import halsteadEffort from "../metrics/effort";
+import halsteadVolume from "../metrics/volume";
+import shannonEntropy from "../metrics/entropy";
 
 onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file: string }>) {
 	let framework = frameworks[e.data.frameworkName];
