@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "": ".",
     "@angular/compiler": "^21.2.13",
     "@babel/parser": "^7.29.3",
     "@vue/compiler-sfc": "^3.5.34",
