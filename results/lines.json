@@ -2,10 +2,11 @@
     "react": {
         "radix": {
             "params": [
-                0.6383,
-                1.3985
+                0.0006,
+                19.7235,
+                -5188.221
             ],
-            "type": "power"
+            "type": "polynomial"
         },
         "effort": {
             "params": [
@@ -26,10 +27,11 @@
     "solid": {
         "radix": {
             "params": [
-                0.6391,
-                1.3973
+                0.0003,
+                37.0765,
+                -27694.3294
             ],
-            "type": "power"
+            "type": "polynomial"
         },
         "effort": {
             "params": [
@@ -50,10 +52,11 @@
     "svelte": {
         "radix": {
             "params": [
-                0.7597,
-                1.3957
+                0.0007,
+                30.4948,
+                -15856.6743
             ],
-            "type": "power"
+            "type": "polynomial"
         },
         "effort": {
             "params": [
@@ -74,10 +77,11 @@
     "vue": {
         "radix": {
             "params": [
-                1.3268,
-                1.2079
+                0.0028,
+                7.9819,
+                -250.9227
             ],
-            "type": "power"
+            "type": "polynomial"
         },
         "effort": {
             "params": [
@@ -98,10 +102,11 @@
     "angular": {
         "radix": {
             "params": [
-                0.9343,
-                1.3406
+                0.0004,
+                18.1529,
+                -1070.1772
             ],
-            "type": "power"
+            "type": "polynomial"
         },
         "effort": {
             "params": [

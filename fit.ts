@@ -2,7 +2,7 @@ import { linear, power, polynomial } from "regression";
 import results from "./results/results.json";
 
 let independent = "volume";
-let metrics: { [key: string]: [Function, string] } = { radix: [power, "power"], effort: [polynomial, "polynomial"], entropy: [linear, "linear"] };
+let metrics: { [key: string]: [Function, string] } = { radix: [polynomial, "polynomial"], effort: [polynomial, "polynomial"], entropy: [linear, "linear"] };
 
 let lines: { [key: string]: { [key: string]: any } } = {};
 
