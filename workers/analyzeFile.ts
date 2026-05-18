@@ -4,11 +4,12 @@ import radixEconomy from "../metrics/radix";
 import halsteadEffort from "../metrics/effort";
 import halsteadVolume from "../metrics/volume";
 import shannonEntropy from "../metrics/entropy";
+import zipfDistribution from "../metrics/zipf";
 
 onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file: string }>) {
 	let framework = frameworks[e.data.frameworkName];
 	let content = await Bun.file(`./codebases/${framework.name}/${e.data.file}`).text();
-	
+
 	try {
 		var program = framework.parser(content);
 	} catch {
@@ -20,6 +21,7 @@ onmessage = async function (e: MessageEvent<{ frameworkName: FrameworkName, file
 	let radix = radixEconomy(program);
 	let effort = halsteadEffort(program, framework.operators);
 	let entropy = shannonEntropy(program);
+	let zipf = zipfDistribution(program);
 
-	postMessage({ volume, radix, effort, entropy });
+	postMessage({ volume, radix, effort, entropy, zipf });
 }

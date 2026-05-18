@@ -1,4 +1,4 @@
-import { linear, power, polynomial } from "regression";
+import { linear, polynomial } from "regression";
 import results from "./results/results.json";
 
 let independent = "volume";

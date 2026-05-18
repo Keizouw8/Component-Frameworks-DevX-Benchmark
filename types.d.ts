@@ -1,5 +1,5 @@
 type FrameworkName = "react" | "solid" | "svelte" | "vue" | "angular";
-type Method = "radix" | "effort" | "entropy";
+type Method = "radix" | "effort" | "entropy" | "zipf";
 type Results = { [key in FrameworkName]: Result[] };
 
 interface Framework {
@@ -21,6 +21,7 @@ interface Result {
 	radix: number;
 	effort: number;
 	entropy: number;
+	zipf: number;
 }
 
 type Point = [number, number];
