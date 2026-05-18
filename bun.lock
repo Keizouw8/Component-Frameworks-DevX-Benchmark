@@ -4,6 +4,7 @@
   "workspaces": {
     "": {
       "dependencies": {
+        "": ".",
         "@angular/compiler": "^21.2.13",
         "@babel/parser": "^7.29.3",
         "@vue/compiler-sfc": "^3.5.34",
@@ -22,6 +23,8 @@
     },
   },
   "packages": {
+    "": ["@root:", {}],
+
     "@angular/compiler": ["@angular/compiler@21.2.13", "", { "dependencies": { "tslib": "^2.3.0" } }, "sha512-0OZk5ujHgowRme3iXJ1Ce1OI3eTDcGovBARBiyJT0E8kt9Y0TdQdGaYMRrNN1UzDv4hk8f1d/xVeF0BpMTvqPQ=="],
 
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.27.1", "", {}, "sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA=="],
